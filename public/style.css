@@ -1,0 +1,26 @@
+/* Fix for overlapping content under navbar */
+body {
+    padding-top: 70px; /* Adjust according to your navbar height */
+}
+
+header {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+}
+
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 9999;
+}
+
+/* Additional padding on the main content to prevent overlap */
+.container-fluid,
+.py-4,
+.pt-6 {
+    margin-top: 70px;
+}
