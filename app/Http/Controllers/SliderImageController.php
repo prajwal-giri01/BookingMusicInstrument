@@ -38,9 +38,8 @@ class SliderImageController extends Controller
             'image_path' => 'storage/' . $imagePath,  // Ensure it is prefixed with 'storage/'
         ]);
 
-        // Fetch updated images and return the view with success message
-        $images = SliderImage::all();
-        return view('admin.sliders.index', compact('images'))->with('success', 'Image uploaded successfully!');
+        return redirect()->route('admin.sliders.index')->with('success', 'Image uploaded successfully!');
+
     }
 
     // Show the form to edit an image
@@ -70,9 +69,8 @@ class SliderImageController extends Controller
 
         $image->save();
 
-        // Fetch updated images and return the view with success message
-        $images = SliderImage::all();
-        return view('admin.sliders.index', compact('images'))->with('success', 'Image updated successfully!');
+        return redirect()->route('admin.sliders.index')->with('success', 'Image uploaded successfully!');
+
     }
 
     // Delete an image

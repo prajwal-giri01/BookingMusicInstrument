@@ -187,7 +187,7 @@
                 <div class="col-md-6 col-lg-3">
                     <div class="card h-100 border-0 shadow-sm">
 {{--                        <span class="position-absolute top-0 end-0 badge bg-danger m-3">Popular</span>--}}
-                        <img src="{{asset('Photos/1741440425.jpg')}}" class="card-img-top" alt="Grand Piano">
+                        <img src="{{ asset($item->image_path) }}" class="card-img-top" alt="Grand Piano">
                         <div class="card-body">
                             <h5 class="card-title">{{$item->name}}</h5>
                             <p class="card-text text-muted">{{$item->category->name}}</p>

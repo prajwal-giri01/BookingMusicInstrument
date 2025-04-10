@@ -30,9 +30,54 @@ class PageController extends Controller
     {
         $categories = category::all();
         $category = Category::findorfail($id);
-        $drinks = Instruments::where('category_id', $id)->get();
-        return view('pages.instruments', compact('drinks','category', 'categories'));
+        $instruments = Instruments::where('category_id', $id)->get();
+        return view('pages.instruments', compact('instruments','category', 'categories'));
     }
+    public function search(Request $request)
+    {
+        // Optional text query (if provided)
+        $query = $request->input('query');
+
+        // Get an array of selected category IDs (if any)
+        $selectedCategories = $request->input('categories');
+
+        // Get price range filters
+        $minPrice = $request->input('min_price');
+        $maxPrice = $request->input('max_price');
+
+        // Retrieve all categories to populate the filter dropdown.
+        $allCategories = Category::all();
+
+        $instruments = Instruments::with('category')
+            ->when($query, function ($q) use ($query) {
+                $q->where(function ($q2) use ($query) {
+                    $q2->where('name', 'like', "%{$query}%")
+                        ->orWhere('description', 'like', "%{$query}%");
+                });
+            })
+            ->when($selectedCategories, function ($q) use ($selectedCategories) {
+                $q->whereIn('category_id', $selectedCategories);
+            })
+            ->when($minPrice, function ($q) use ($minPrice) {
+                $q->where('rental_price', '>=', $minPrice);
+            })
+            ->when($maxPrice, function ($q) use ($maxPrice) {
+                $q->where('rental_price', '<=', $maxPrice);
+            })
+
+            ->get();
+
+        return view('pages.instruments', [
+            'instruments' => $instruments,
+            'query' => $query,
+            'categories' => $allCategories,
+            'selectedCategories' => $selectedCategories,
+            'minPrice' => $minPrice,
+            'maxPrice' => $maxPrice,
+        ]);
+    }
+
+
 
 
 }

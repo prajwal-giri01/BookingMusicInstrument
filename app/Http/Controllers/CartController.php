@@ -5,73 +5,84 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Instruments;
-use App\Models\Order;
-use App\Models\Drinks;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class CartController extends Controller
 {
-    public function addToCart(Request $request, $id)
+    // GET /cart => cart.index
+    public function index()
     {
-        // Find the product
-        $product = Instruments::findOrFail($id);
-
-        // Get the cart for the logged-in user, or create one if it doesn't exist
-        $cart = Cart::firstOrCreate(['user_id' => auth()->id()]);
-
-        // Add or update the item in the cart
-        $cartItem = $cart->items()->updateOrCreate(
-            ['instrument_id' => $product->id],
-            [
-                'quantity' => DB::raw('quantity + 1'),
-                'rental_start_date' => $request->input('start_date'),
-                'rental_end_date' => $request->input('end_date'),
-            ]
-        );
-        return redirect()->back()->with('success', $product->name . ' added to cart!');
-    }
-
-    public function showCart()
-    {
-        // Retrieve the cart with related products
+        // Retrieve the cart with related instruments for the authenticated user.
         $cart = Cart::with('items.instrument')->where('user_id', auth()->id())->first();
-        // Return an empty array if the cart is not found
         $cartItems = $cart ? $cart->items : [];
         return view('pages.cart.show', compact('cartItems'));
     }
 
-    public function updateCart(Request $request, $id)
+    // POST /cart/add/{id} => cart.add
+    public function addToCart(Request $request, $id)
+    {
+        $product = Instruments::findOrFail($id);
+
+        // Create or retrieve the cart for the current user.
+        $cart = Cart::firstOrCreate(['user_id' => auth()->id()]);
+
+        // Check if the product is already in the cart.
+        $cartItem = $cart->items()->where('instrument_id', $product->id)->first();
+
+        if ($cartItem) {
+            // Increment quantity and update rental dates.
+            $cartItem->increment('quantity');
+            $cartItem->update([
+                'rental_start_date' => $request->input('start_date'),
+                'rental_end_date'   => $request->input('end_date'),
+            ]);
+        } else {
+            // Create new cart item with quantity set to 1.
+            $cartItem = $cart->items()->create([
+                'instrument_id'     => $product->id,
+                'quantity'          => 1,
+                'rental_start_date' => $request->input('start_date'),
+                'rental_end_date'   => $request->input('end_date'),
+            ]);
+        }
+
+        return redirect()->back()->with('success', $product->name . ' added to cart!');
+    }
+
+    // PUT /cart/update/{id} => cart.update
+    public function update(Request $request, $id)
     {
         $cartItem = CartItem::findOrFail($id);
-        $cartItem->update(['quantity' => $request->quantity]);
+        $cartItem->update([
+            'quantity' => $request->input('quantity')
+        ]);
 
-        return redirect()->route('cart.show')->with('success', 'Cart updated successfully!');
+        return redirect()->route('cart.index')->with('success', 'Cart updated successfully!');
     }
-    public function removeFromCart($id)
+
+    // DELETE /cart/remove/{id} => cart.remove
+    public function remove($id)
     {
         $cartItem = CartItem::findOrFail($id);
         $cartItem->delete();
 
-        return redirect()->route('cart.show')->with('success', 'Item removed from cart!');
+        return redirect()->route('cart.index')->with('success', 'Item removed from cart!');
     }
+
+    // PUT /cart/updateDate/{id} => cart.updateDate
     public function updateDate(Request $request, $id)
     {
-        // Validate dates
         $request->validate([
             'start_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date',
+            'end_date'   => 'required|date|after_or_equal:start_date',
         ]);
 
-        // Find the cart item and update dates
         $cartItem = CartItem::findOrFail($id);
-        $cartItem->rental_start_date = $request->input('start_date');
-        $cartItem->rental_end_date = $request->input('end_date');
-        $cartItem->save();
+        $cartItem->update([
+            'rental_start_date' => $request->input('start_date'),
+            'rental_end_date'   => $request->input('end_date'),
+        ]);
 
         return redirect()->back()->with('success', 'Rental period updated successfully!');
     }
-
-
 }
-

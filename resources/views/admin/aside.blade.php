@@ -22,11 +22,17 @@
             </a>
         </li>
 
-        <!-- Bookings -->
         <li class="nav-item">
             <a class="nav-link" href="{{route('admin.instruments.index')}}">
                 <i class="bi bi-file-earmark-music"></i>
                 <span class="link-text">Instruments</span>
+            </a>
+        </li>
+        <!-- Bookings -->
+        <li class="nav-item">
+            <a class="nav-link" href="{{route('admin.booking.index')}}">
+                <i class="bi bi-file-earmark-music"></i>
+                <span class="link-text">Bookings</span>
             </a>
         </li>
     </ul>

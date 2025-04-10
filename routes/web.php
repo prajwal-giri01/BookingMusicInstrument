@@ -1,8 +1,12 @@
 <?php
 
+use App\Http\Controllers\BookingController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\instrumentsController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PageController;
@@ -17,16 +21,30 @@ Route::controller(PageController::class)->group(function () {
     Route::get('/', 'home')->name('home');
     Route::get('/detail/{instruments}', 'instrumentDetail')->name('detail');
     Route::get('/instruments/{instruments}', 'instruments')->name('instruments');
+    Route::get('/search', 'search')->name('search');
 });
+
 
 // ✅ User Dashboard (Only Authenticated Users)
 Route::middleware(['auth', 'verified'])->group(function () {
 
+    Route::post('/order/{order}/payment', [PaymentController::class, 'process'])->name('order.payment.process');
+
+
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
     Route::post('/cart/add/{id}', [CartController::class, 'addToCart'])->name('cart.add');
-    Route::get('/cart', [CartController::class, 'showCart'])->name('cart.show');
-    Route::put('/cart/update/{id}', [CartController::class, 'updateCart'])->name('cart.update');
-    Route::delete('/cart/remove/{id}', [CartController::class, 'removeFromCart'])->name('cart.remove');
-    Route::put('/cart/update-date/{id}', [CartController::class, 'updateDate'])->name('cart.updateDate');
+    Route::put('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
+    Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
+    Route::put('/cart/updateDate/{id}', [CartController::class, 'updateDate'])->name('cart.updateDate');
+    Route::post('/order/{order}/cancel', [OrderController::class, 'cancel'])->name('order.cancel');
+
+
+    // Order/Checkout routes
+    Route::get('/checkout', [OrderController::class, 'checkout'])->name('checkout');
+    Route::post('/checkout', [OrderController::class, 'store'])->name('checkout.store');
+    Route::get('/order/confirmation/{order}', [OrderController::class, 'confirmation'])->name('order.confirmation');
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/order/{order}', [OrderController::class, 'show'])->name('order.show');
 
 
     Route::get('/dashboard', function () {
@@ -80,12 +98,19 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::put('category/{id}', [CategoryController::class, 'update'])->name('category.update');
     Route::delete('category/{id}', [CategoryController::class, 'destroy'])->name('category.destroy');
 
-    //Drink
+    //instrument
     Route::get('instruments', [instrumentsController::class, 'index'])->name('instruments.index');
     Route::get('instruments/create', [instrumentsController::class, 'create'])->name('instruments.create');
     Route::post('instruments', [instrumentsController::class, 'store'])->name('instruments.store');
     Route::get('instruments/{id}/edit', [instrumentsController::class, 'edit'])->name('instruments.edit');
     Route::put('instruments/{id}', [instrumentsController::class, 'update'])->name('instruments.update');
     Route::delete('instruments/{id}', [instrumentsController::class, 'destroy'])->name('instruments.destroy');
+
+    //bookings
+    Route::get('bookings', [BookingController::class, 'index'])->name('booking.index');
+    Route::get('bookings/{id}', [BookingController::class, 'show'])->name('booking.show');
+    Route::get('bookings/{id}/edit', [BookingController::class, 'edit'])->name('booking.edit');
+    Route::put('bookings/{id}', [BookingController::class, 'update'])->name('booking.update');
+    Route::delete('bookings/{id}', [BookingController::class, 'destroy'])->name('booking.destroy');
 });
 

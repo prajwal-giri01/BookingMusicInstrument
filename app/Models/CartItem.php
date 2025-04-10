@@ -13,7 +13,10 @@ class CartItem extends Model
         'rental_start_date',  // New field
         'rental_end_date',    // New field
     ];
-
+    public function cart()
+    {
+        return $this->belongsTo(Cart::class);
+    }
     public function instrument()
     {
         return $this->belongsTo(Instruments::class);

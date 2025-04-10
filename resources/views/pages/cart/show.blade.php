@@ -112,7 +112,7 @@
                                 </li>
                             </ul>
 
-                            <a href="#" class="btn btn-primary btn-lg btn-block">Go to Checkout</a>
+                            <a href="{{ route('checkout') }}" class="btn btn-primary btn-lg btn-block">Go to Checkout</a>
                         </div>
                     </div>
                 </div>

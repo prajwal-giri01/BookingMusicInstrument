@@ -35,8 +35,7 @@ class CategoryController extends Controller
             'image_path' => $imagePath ?? null,
         ]);
 
-        $categories = Category::all();
-        return view('admin.category.index', compact('categories'))->with('success', 'Category created successfully!');
+        return redirect()->route('admin.category.index')->with('success', 'Category created successfully!');
     }
 
     public function edit($id)
@@ -65,8 +64,7 @@ class CategoryController extends Controller
         $category->name = $request->input('name');
         $category->save();
 
-        $categories = Category::all();
-        return view('admin.category.index', compact('categories'))->with('success', 'Category updated successfully!');
+        return redirect()->route('admin.category.index')->with('success', 'Category created successfully!');
     }
 
     public function destroy($id)
@@ -79,7 +77,5 @@ class CategoryController extends Controller
 
         $category->delete();
 
-        $categories = Category::all();
-        return view('admin.category.index', compact('categories'))->with('success', 'Category deleted successfully!');
-    }
+        return redirect()->route('admin.category.index');    }
 }

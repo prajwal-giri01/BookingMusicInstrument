@@ -12,6 +12,17 @@ class Order extends Model
         'payment_status',
         'rental_status',
         'transaction_id',
+        'delivery_address',
+        'latitude',
+        'longitude',
     ];
+
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
+
+    public function orderItems(){
+       return $this->hasMany(OrderItem::class);
+    }
 
 }

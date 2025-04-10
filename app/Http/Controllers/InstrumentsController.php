@@ -37,7 +37,7 @@ class InstrumentsController extends Controller
         // Upload the image using Storage facade
         $imagePath = $request->file('image_path')->store('photos', 'public');
 
-        // Store the drink details in the database
+        // Store the instrument details in the database
         Instruments::create([
             'name' => $request->name,
             'image_path' => 'storage/' . $imagePath,
@@ -45,7 +45,7 @@ class InstrumentsController extends Controller
             'rental_price' => $request->price,
             'category_id' => $request->category_id,
         ]);
-        return redirect()->route('admin.instruments.index')->with('success', 'Drink updated successfully!');
+        return redirect()->route('admin.instruments.index')->with('success', 'instrument updated successfully!');
     }
 
 
@@ -53,8 +53,8 @@ class InstrumentsController extends Controller
     public function edit($id)
     {
         $categories = Category::all();
-        $drink = Instruments::findOrFail($id);
-        return view('admin.instruments.edit', compact('drink','categories'));
+        $instrument = Instruments::findOrFail($id);
+        return view('admin.instruments.edit', compact('instrument','categories'));
     }
 
     // Update an image
@@ -68,20 +68,20 @@ class InstrumentsController extends Controller
             'image_path' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        $drink = Instruments::findOrFail($id);
+        $instrument = Instruments::findOrFail($id);
 
         if ($request->hasFile('image_path')) {
             $imagePath = $request->file('image_path')->store('photos', 'public');
-            $drink->image_path = 'storage/' . $imagePath;
+            $instrument->image_path = 'storage/' . $imagePath;
         }
 
-        $drink->name = $request->name;
-        $drink->description = $request->description;
-        $drink->rental_price = $request->price;
-        $drink->category_id = $request->category_id;
-        $drink->save();
+        $instrument->name = $request->name;
+        $instrument->description = $request->description;
+        $instrument->rental_price = $request->price;
+        $instrument->category_id = $request->category_id;
+        $instrument->save();
 
-        return redirect()->route('admin.instruments.index')->with('success', 'Drink updated successfully!');
+        return redirect()->route('admin.instruments.index')->with('success', 'Instrument updated successfully!');
     }
 
 
@@ -95,6 +95,6 @@ class InstrumentsController extends Controller
 
         // Delete the image record from the database
         $image->delete();
-        return redirect()->route('admin.instruments.index')->with('success', 'Drink deleted successfully!');
+        return redirect()->route('admin.instruments.index')->with('success', 'Instrument deleted successfully!');
     }
 }
