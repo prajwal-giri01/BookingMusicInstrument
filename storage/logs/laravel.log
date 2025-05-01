@@ -1,0 +1,6 @@
+[2025-05-01 17:22:04] local.INFO: Khalti Response: {"pidx":"nb5ZLX3T6R6mR5CGR7YEoh","payment_url":"https://test-pay.khalti.com/?pidx=nb5ZLX3T6R6mR5CGR7YEoh","expires_at":"2025-05-01T23:37:04.507299+05:45","expires_in":1800} 
+[2025-05-01 17:26:16] local.INFO: Cart items deleted using relation method for user ID: 8  
+[2025-05-01 17:26:16] local.INFO: Order confirmed and cart cleared successfully for user ID: 8  
+[2025-05-01 17:26:37] local.INFO: Khalti Response: {"pidx":"VthLA3ZqwQJHuvxKscTFXP","payment_url":"https://test-pay.khalti.com/?pidx=VthLA3ZqwQJHuvxKscTFXP","expires_at":"2025-05-01T23:41:37.340701+05:45","expires_in":1800} 
+[2025-05-01 17:26:52] local.INFO: Cart items deleted using relation method for user ID: 8  
+[2025-05-01 17:26:52] local.INFO: Order confirmed and cart cleared successfully for user ID: 8  

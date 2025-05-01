@@ -1,6 +1,6 @@
 @extends('frontend.Master')
 @section('content')
-    <div class="container mt-4">
+    <div class="container" style="margin-top: 7rem;">
         <h1 class="mb-4">My Orders</h1>
 
         @if(session('success'))

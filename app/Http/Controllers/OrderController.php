@@ -21,8 +21,8 @@ class OrderController extends Controller
         if (!$cart || $cart->items->isEmpty()) {
             return redirect()->route('cart.index')->with('error', 'Your cart is empty.');
         }
-
-        return view('pages.checkout', compact('cart'));
+        $order = Order::where('user_id', auth()->id())->first();
+        return view('pages.checkout', compact('cart', 'order'));
     }
 
     /**

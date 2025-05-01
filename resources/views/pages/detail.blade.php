@@ -192,30 +192,18 @@
         <div class="related-instruments my-5">
             <h3 class="fw-bold mb-4">You May Also Like</h3>
             <div class="row g-4">
-                @foreach($relatedInstruments as $related)
+                @foreach($relatedInstruments as $item)
                     <div class="col-md-6 col-lg-3">
-                        <div class="card h-100 rounded-4 border-0 shadow-sm hover-lift overflow-hidden">
-                            <img src="{{ asset('storage/'.$related->image_path) }}" class="card-img-top" alt="{{ $related->name }}" style="height: 200px; object-fit: cover;">
+                        <div class="card h-100 border-0 shadow-sm">
+                            {{--                        <span class="position-absolute top-0 end-0 badge bg-danger m-3">Popular</span>--}}
+                            <img src="{{ asset($item->image_path) }}" class="card-img-top" alt="Grand Piano">
                             <div class="card-body">
-                                <h5 class="card-title fw-bold">{{ $related->name }}</h5>
-                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <div class="rating text-warning">
-                                        @for($i = 1; $i <= 5; $i++)
-                                            @if($i <= $related->rating)
-                                                <i class="bi bi-star-fill"></i>
-                                            @elseif($i - 0.5 <= $related->rating)
-                                                <i class="bi bi-star-half"></i>
-                                            @else
-                                                <i class="bi bi-star"></i>
-                                            @endif
-                                        @endfor
-                                    </div>
-                                    <span class="badge bg-{{ $related->in_stock ? 'success' : 'danger' }}">
-                                        {{ $related->in_stock ? 'Available' : 'Unavailable' }}
-                                    </span>
+                                <h5 class="card-title">{{$item->name}}</h5>
+                                <p class="card-text text-muted">{{$item->category->name}}</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="text-primary fw-bold">Rs.{{$item->rental_price}}/day</span>
+                                    <a href="{{route('detail',$item->id)}}" class="btn btn-sm btn-outline-primary">Book Now</a>
                                 </div>
-                                <p class="text-primary fw-bold mb-3">Rs.{{ number_format($related->daily_rate, 2) }} / day</p>
-                                <a href="#" class="btn btn-outline-primary w-100">View Details</a>
                             </div>
                         </div>
                     </div>
@@ -389,11 +377,12 @@
                 let selectedDates = [];
 
                 // Toggle date picker dropdown
-                datePickerToggle.addEventListener('click', function() {
-                    if (datePickerDropdown.style.display === 'none' || datePickerDropdown.style.display === '') {
-                        datePickerDropdown.style.display = 'block';
-                    } else {
+                datePickerToggle.addEventListener('click', function(event) {
+                    event.stopPropagation(); // Prevent closing immediately when clicking toggle button or its children
+                    if (datePickerDropdown.style.display === 'block') {
                         datePickerDropdown.style.display = 'none';
+                    } else {
+                        datePickerDropdown.style.display = 'block';
                     }
                 });
 
@@ -403,9 +392,10 @@
                     if (!datePickerDropdown.contains(event.target) &&
                         event.target !== datePickerToggle &&
                         event.target !== dateRangeDisplay) {
-                        datePickerDropdown.style.display = 'block';
+                        datePickerDropdown.style.display = 'block'; // ✅ fix: 'none' to close
                     }
                 });
+
 
                 // Initialize calendars
                 initCalendars();

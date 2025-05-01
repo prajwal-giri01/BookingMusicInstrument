@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\View\View;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +20,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+//        View::composer('frontend.Header', function ($view) {
+//            $homePageSubtitle = Setting::where('key', 'home-page-subtitle')->first()->value;
+//
+//            $view->with([
+//                'homePageSubtitle' => $homePageSubtitle,
+//            ]);
+//        });
     }
 }

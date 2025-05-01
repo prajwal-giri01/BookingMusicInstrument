@@ -5,6 +5,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\instrumentsController;
+use App\Http\Controllers\KhaltiPaymentController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
@@ -23,8 +24,8 @@ Route::controller(PageController::class)->group(function () {
     Route::get('/instruments/{instruments}', 'instruments')->name('instruments');
     Route::get('/search', 'search')->name('search');
 });
-
-
+Route::post('/khalti/purchase', [KhaltiPaymentController::class, 'purchase'])->name('khalti.purchase');
+Route::get('/verify-payment', [KhaltiPaymentController::class, 'verifyPayment']);
 // ✅ User Dashboard (Only Authenticated Users)
 Route::middleware(['auth', 'verified'])->group(function () {
 
@@ -41,7 +42,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Order/Checkout routes
     Route::get('/checkout', [OrderController::class, 'checkout'])->name('checkout');
-    Route::post('/checkout', [OrderController::class, 'store'])->name('checkout.store');
+    Route::post('/checkout/complete', [OrderController::class, 'store'])->name('checkout.store');
     Route::get('/order/confirmation/{order}', [OrderController::class, 'confirmation'])->name('order.confirmation');
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/order/{order}', [OrderController::class, 'show'])->name('order.show');

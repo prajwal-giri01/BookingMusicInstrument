@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Instruments;
+use App\Models\Order;
 use Illuminate\Http\Request;
 
 class CartController extends Controller
@@ -12,9 +13,9 @@ class CartController extends Controller
     // GET /cart => cart.index
     public function index()
     {
-        // Retrieve the cart with related instruments for the authenticated user.
         $cart = Cart::with('items.instrument')->where('user_id', auth()->id())->first();
         $cartItems = $cart ? $cart->items : [];
+
         return view('pages.cart.show', compact('cartItems'));
     }
 

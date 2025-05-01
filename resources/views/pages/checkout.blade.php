@@ -76,7 +76,7 @@
                             </ul>
 
                             <!-- Delivery Location Section -->
-                            <form action="{{ route('checkout.store') }}" method="POST" class="mt-3">
+                            <form id="khalti-payment-form">
                                 @csrf
                                 <div class="form-group mb-3">
                                     <label for="delivery_address">Delivery Address</label>
@@ -90,10 +90,15 @@
                                 <input type="hidden" name="latitude" id="latitude">
                                 <input type="hidden" name="longitude" id="longitude">
 
-                                <button type="submit" class="btn btn-primary btn-lg btn-block mt-3">
-                                    Confirm Order
-                                </button>
-                            </form>
+
+                                    @csrf
+                                    <input type="hidden" name="service_id" value="{{ $order->id }}">
+                                    <input type="hidden" name="name" value="Instrument Rental">
+                                    <input type="hidden" name="amount" value="{{ $item->instrument->rental_price * $item->quantity, 2 }}">
+                                    <input type="hidden" name="user" value="{{ auth()->id() }}">
+                                    <button type="submit" class="btn btn-success btn-lg btn-block" id="khalti-btn">Pay with Khalti</button>
+                                </form>
+
                         </div>
                     </div>
                 </div>
@@ -154,5 +159,38 @@
         // Set initial hidden inputs to the default position.
         updatePosition(defaultLat, defaultLng);
     </script>
+    <script>
+        document.getElementById('khalti-payment-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const form = this;
+            const formData = new FormData(form);
+            const submitBtn = document.getElementById('khalti-btn');
+            submitBtn.disabled = true;
+            submitBtn.innerText = "Redirecting...";
 
+            fetch("{{ route('khalti.purchase') }}", {
+                method: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': form.querySelector('input[name="_token"]').value
+                },
+                body: formData
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.khalti_url) {
+                        window.location.href = data.khalti_url;
+                    } else {
+                        alert("Error initiating payment. Please try again.");
+                        submitBtn.disabled = false;
+                        submitBtn.innerText = "Pay with Khalti";
+                    }
+                })
+                .catch(error => {
+                    console.error('Payment initiation failed:', error);
+                    alert("Something went wrong. Please try again later.");
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = "Pay with Khalti";
+                });
+        });
+    </script>
 @endsection
