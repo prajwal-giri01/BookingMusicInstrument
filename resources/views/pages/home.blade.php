@@ -179,24 +179,40 @@
             <div class="row g-4">
                 @foreach($instruments as $item)
                     <div class="col-md-6 col-lg-3">
-                        <div class="featured-card">
-                            <div class="position-relative overflow-hidden">
-                                <img src="{{ asset($item->image_path) }}" class="card-img-top" alt="{{ $item->name }}">
-                                @if($loop->first)
-                                    <span class="featured-badge animate-pulse">Popular</span>
+                        <div class="instrument-card {{ $item->stock_quantity <= 0 ? 'out-of-stock' : '' }}">
+                            <div class="instrument-image position-relative">
+                                <img src="{{ asset($item->image_path) }}" alt="{{ $item->name }}">
+
+                                @if($item->stock_quantity <= 0)
+                                    <div class="stock-badge">Out of Stock</div>
+                                @else
+                                    <div class="instrument-actions">
+                                        <a href="{{ route('detail', $item->id) }}" class="btn-quick-view">
+                                            <i class="bi bi-eye"></i>
+                                            <span>Quick View</span>
+                                        </a>
+                                    </div>
                                 @endif
                             </div>
-                            <div class="card-body">
-                                <h5 class="card-title mb-2">{{$item->name}}</h5>
-                                <p class="card-text text-muted mb-3">{{$item->category->name}}</p>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <span class="featured-price">Rs.{{$item->rental_price}}/day</span>
-                                    <a href="{{route('detail',$item->id)}}" class="btn btn-sm btn-outline-primary">Book Now</a>
+
+                            <div class="instrument-info">
+                                <div class="instrument-category">{{ $item->category->name }}</div>
+                                <h3 class="instrument-name">{{ $item->name }}</h3>
+                                <div class="instrument-price">
+                                    <span class="price-value">Rs.{{ $item->rental_price }}</span>
+                                    <span class="price-period">/day</span>
                                 </div>
+
+                                @if($item->stock_quantity > 0)
+                                    <a href="{{ route('detail', $item->id) }}" class="btn btn-book">Add To Cart</a>
+                                @else
+                                    <button class="btn btn-secondary" disabled>Out of Stock</button>
+                                @endif
                             </div>
                         </div>
                     </div>
                 @endforeach
+
             </div>
         </div>
     </section>

@@ -137,7 +137,7 @@
                             </div>
 
                             <button type="submit" class="btn btn-primary w-100 py-3 rounded-pill" id="bookNowBtn" disabled>
-                                <i class="bi bi-calendar-check me-2"></i> Book Now
+                                <i class="bi bi-calendar-check me-2"></i> Add To Cart
                             </button>
                         </form>
                     </div>
@@ -202,7 +202,7 @@
                                 <p class="card-text text-muted">{{$item->category->name}}</p>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <span class="text-primary fw-bold">Rs.{{$item->rental_price}}/day</span>
-                                    <a href="{{route('detail',$item->id)}}" class="btn btn-sm btn-outline-primary">Book Now</a>
+                                    <a href="{{route('detail',$item->id)}}" class="btn btn-sm btn-outline-primary">Add To Cart</a>
                                 </div>
                             </div>
                         </div>

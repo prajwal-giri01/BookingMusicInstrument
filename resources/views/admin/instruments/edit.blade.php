@@ -18,6 +18,11 @@
                     <label for="description">Description</label>
                     <textarea name="description" class="form-control" rows="3" required>{{ $instrument->description }}</textarea>
                 </div>
+                <div class="form-group mb-3">
+                    <label for="stock_quantity">Stock Quantity</label>
+                    <input type="number" name="stock_quantity" class="form-control" required min="0"  value="{{ $instrument->stock_quantity }}" >
+                </div>
+
 
                 <div class="form-group mt-3">
                     <label for="price">Price</label>

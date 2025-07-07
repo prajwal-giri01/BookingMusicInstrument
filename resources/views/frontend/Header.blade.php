@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg fixed-top">
+<nav class="navbar navbar-expand-lg sticky-top">
     <div class="container">
         <!-- Logo -->
         <a class="navbar-brand" href="{{ url('/') }}">
@@ -18,7 +18,11 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url('/') }}">Home</a>
                 </li>
-
+                @auth
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('custom-packages.index') }}">Custom Packages</a>
+                </li>
+                @endauth
                 <!-- Search Bar -->
                 <li class="nav-item search-item">
                     <form class="search-form" action="{{ url('/search') }}" method="GET">

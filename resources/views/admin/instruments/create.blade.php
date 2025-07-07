@@ -22,6 +22,10 @@
                     <label for="description">Description</label>
                     <textarea name="description" class="form-control" placeholder="Enter instrument description" rows="3" required></textarea>
                 </div>
+                <div class="form-group mb-3">
+                    <label for="stock_quantity">Stock Quantity</label>
+                    <input type="number" name="stock_quantity" class="form-control" required min="0" value="{{ old('stock_quantity', $instrument->stock_quantity ?? 0) }}">
+                </div>
 
                 <div class="form-group">
                     <label for="price">Price</label>

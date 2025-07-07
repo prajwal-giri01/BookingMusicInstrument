@@ -21,8 +21,8 @@ class OrderController extends Controller
         if (!$cart || $cart->items->isEmpty()) {
             return redirect()->route('cart.index')->with('error', 'Your cart is empty.');
         }
-        $order = Order::where('user_id', auth()->id())->first();
-        return view('pages.checkout', compact('cart', 'order'));
+
+        return view('pages.checkout', compact('cart'));
     }
 
     /**
@@ -146,5 +146,19 @@ class OrderController extends Controller
         return redirect()->route('order.show', $order->id)
             ->with('success', 'Order cancelled successfully.');
     }
+
+
+
+    public function checkoutCustom()
+    {
+        $checkoutData = session('direct_checkout');
+
+        if (!$checkoutData) {
+            return redirect()->route('custom-packages.index')->with('error', 'No rental package selected.');
+        }
+
+        return view('pages.checkout_custom_package', compact('checkoutData'));
+    }
+
 
 }

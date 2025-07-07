@@ -15,6 +15,13 @@ class Order extends Model
         'delivery_address',
         'latitude',
         'longitude',
+        'street',
+        'ward',
+        'city',
+        'district',
+        'province',
+        'postal_code',
+        'country',
     ];
 
     public function user(){

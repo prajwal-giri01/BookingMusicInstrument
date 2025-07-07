@@ -44,18 +44,30 @@ class BookingController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $booking = Order::findOrFail($id);
+        $booking = Order::with('orderItems.instrument')->findOrFail($id); // eager load
 
         $validated = $request->validate([
-            'payment_status' => 'required|string',
+
             'rental_status'  => 'required|string',
         ]);
+
+        // If rental status is being changed to "completed", restore stock
+        if ($validated['rental_status'] === 'completed' && $booking->rental_status !== 'completed') {
+
+            foreach ($booking->orderItems as $item) {
+                $instrument = $item->instrument;
+                if ($instrument) {
+                    $instrument->increment('stock_quantity', $item->quantity);
+                }
+            }
+        }
 
         $booking->update($validated);
 
         return redirect()->route('admin.booking.show', $booking->id)
             ->with('success', 'Booking status updated successfully.');
     }
+
 
 
     /**

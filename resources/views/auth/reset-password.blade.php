@@ -17,7 +17,7 @@
                         <i class="fas fa-envelope text-teal-600"></i>
                         <x-input-label for="email" :value="__('Email')" />
                     </div>
-                    <input id="email" class="block mt-1 w-full rounded-md shadow-sm border-gray-300 focus:border-teal-500 focus:ring-teal-500" type="email" name="email" value="{{ old('email', $request->email) }}" required autofocus autocomplete="username" />
+                    <input id="email" disabled class="block mt-1 w-full rounded-md shadow-sm border-gray-300 focus:border-teal-500 focus:ring-teal-500" type="email" name="email" value="{{ old('email', $request->email) }}" required autofocus autocomplete="username" />
                     <x-input-error :messages="$errors->get('email')" class="mt-2" />
                 </div>
 

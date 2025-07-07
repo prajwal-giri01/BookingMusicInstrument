@@ -1,7 +1,7 @@
 @extends('frontend.Master')
 @section('content')
     <div class="container" style="margin-top: 7rem;">
-        <h1 class="mb-4">My Orders</h1>
+        <h1 class="mb-4 text-center">My Orders</h1>
 
         @if(session('success'))
             <div class="alert alert-success">
@@ -10,19 +10,20 @@
         @endif
 
         @if($orders->isEmpty())
-            <p>You have not placed any orders yet.</p>
+            <div class="alert alert-info text-center">
+                You have not placed any orders yet.
+            </div>
         @else
             <div class="table-responsive">
-                <table class="table table-bordered table-hover text-center">
-                    <thead class="thead-light">
+                <table class="table table-striped table-hover text-center">
+                    <thead class="table-dark">
                     <tr>
                         <th>Order ID</th>
-                        <th>Total Rental Cost</th>
-                        <th>Payment Status</th>
-                        <th>Rental Status</th>
-                        <th>Transaction ID</th>
+                        <th>Total Cost</th>
+                        <th>Payment</th>
+                        <th>Rental</th>
                         <th>Order Date</th>
-                        <th>Actions</th>
+                        <th>Action</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -30,24 +31,16 @@
                         <tr>
                             <td>{{ $order->id }}</td>
                             <td>Rs. {{ number_format($order->total_rental_cost, 2) }}</td>
-                            <td>{{ ucfirst($order->payment_status) }}</td>
-                            <td>{{ ucfirst($order->rental_status) }}</td>
-                            <td>{{ $order->transaction_id ?? 'N/A' }}</td>
+                            <td><span class="badge bg-success">{{ ucfirst($order->payment_status) }}</span></td>
+                            <td><span class="badge bg-info text-dark">{{ ucfirst($order->rental_status) }}</span></td>
+
                             <td>{{ $order->created_at->format('Y-m-d H:i') }}</td>
-                            <td class="d-flex">
-                                <div class="mb-4">
-                                <a href="{{ route('order.show', $order->id) }}" class="btn btn-primary btn-sm">
-                                    View
-                                </a>
+                            <td>
+                                <div class="d-flex justify-content-center gap-2 align-items-center">
+                                    <a href="{{ route('order.show', $order->id) }}" class="btn btn-sm btn-outline-primary">
+                                        View
+                                    </a>
                                 </div>
-                                @if($order->rental_status !== 'cancelled')
-                                    <div class="mb-4">
-                                        <form action="{{ route('order.cancel', $order->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to cancel this order?');">
-                                            @csrf
-                                            <button type="submit" class="btn btn-danger">Cancel Order</button>
-                                        </form>
-                                    </div>
-                                @endif
                             </td>
                         </tr>
                     @endforeach

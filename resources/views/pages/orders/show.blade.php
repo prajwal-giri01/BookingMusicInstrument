@@ -26,20 +26,20 @@
                         <div class="info-item">
                             <div class="info-label">Payment Status</div>
                             <div class="info-value">
-                                <span class="status-badge status-{{ strtolower($order->payment_status) }}">
-                                    <i class="bi bi-circle-fill"></i>
-                                    {{ ucfirst($order->payment_status) }}
-                                </span>
+                            <span class="status-badge status-{{ strtolower($order->payment_status) }}">
+                                <i class="bi bi-circle-fill"></i>
+                                {{ ucfirst($order->payment_status) }}
+                            </span>
                             </div>
                         </div>
 
                         <div class="info-item">
                             <div class="info-label">Rental Status</div>
                             <div class="info-value">
-                                <span class="status-badge status-{{ strtolower($order->rental_status) }}">
-                                    <i class="bi bi-circle-fill"></i>
-                                    {{ ucfirst($order->rental_status) }}
-                                </span>
+                            <span class="status-badge status-{{ strtolower($order->rental_status) }}">
+                                <i class="bi bi-circle-fill"></i>
+                                {{ ucfirst($order->rental_status) }}
+                            </span>
                             </div>
                         </div>
 
@@ -63,7 +63,6 @@
                             </div>
                         </div>
 
-
                         <div class="info-divider"></div>
 
                         <div class="info-item total-item">
@@ -73,17 +72,8 @@
                     </div>
                 </div>
 
-                <!-- Action Buttons -->
+                <!-- Only Back Button -->
                 <div class="action-buttons">
-                    @if($order->rental_status !== 'cancelled')
-                        <form action="{{ route('order.cancel', $order->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to cancel this order? This action cannot be undone.');">
-                            @csrf
-                            <button type="submit" class="btn btn-cancel">
-                                <i class="bi bi-x-circle"></i> Cancel Order
-                            </button>
-                        </form>
-                    @endif
-
                     <a href="{{ route('orders.index') }}" class="btn btn-back">
                         <i class="bi bi-arrow-left"></i> Back to Orders
                     </a>
@@ -146,7 +136,8 @@
                                                     </div>
                                                 </div>
                                                 <div class="rental-duration">
-                                                    {{ \Carbon\Carbon::parse($item->rental_start_date)->diffInDays(\Carbon\Carbon::parse($item->rental_end_date)) + 1 }} {{ Str::plural('day', \Carbon\Carbon::parse($item->rental_start_date)->diffInDays(\Carbon\Carbon::parse($item->rental_end_date)) + 1) }}
+                                                    {{ \Carbon\Carbon::parse($item->rental_start_date)->diffInDays(\Carbon\Carbon::parse($item->rental_end_date)) + 1 }}
+                                                    {{ Str::plural('day', \Carbon\Carbon::parse($item->rental_start_date)->diffInDays(\Carbon\Carbon::parse($item->rental_end_date)) + 1) }}
                                                 </div>
                                             </td>
                                             <td class="item-price">

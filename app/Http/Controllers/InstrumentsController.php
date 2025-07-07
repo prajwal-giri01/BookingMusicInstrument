@@ -32,6 +32,7 @@ class InstrumentsController extends Controller
             'description' => 'required|string',
             'price' => 'required|numeric',
             'category_id' => 'required|exists:categories,id',
+
         ]);
 
         // Upload the image using Storage facade
@@ -44,6 +45,8 @@ class InstrumentsController extends Controller
             'description' => $request->description,
             'rental_price' => $request->price,
             'category_id' => $request->category_id,
+            'stock_quantity' => $request->stock_quantity,
+
         ]);
         return redirect()->route('admin.instruments.index')->with('success', 'instrument updated successfully!');
     }
@@ -66,6 +69,7 @@ class InstrumentsController extends Controller
             'price' => 'required|numeric',
             'category_id' => 'required|exists:categories,id',
             'image_path' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+
         ]);
 
         $instrument = Instruments::findOrFail($id);
@@ -79,6 +83,8 @@ class InstrumentsController extends Controller
         $instrument->description = $request->description;
         $instrument->rental_price = $request->price;
         $instrument->category_id = $request->category_id;
+        $instrument->stock_quantity = $request->stock_quantity;
+
         $instrument->save();
 
         return redirect()->route('admin.instruments.index')->with('success', 'Instrument updated successfully!');
@@ -88,13 +94,16 @@ class InstrumentsController extends Controller
     // Delete an image
     public function destroy($id)
     {
-        $image = Instruments::findOrFail($id);
+        $instrument = Instruments::findOrFail($id);
 
-        // Delete the image file from storage
-        Storage::disk('public')->delete($image->image_path);  // Delete the image using Storage
+        // Remove 'storage/' prefix before deleting
+        if ($instrument->image_path && Storage::disk('public')->exists(str_replace('storage/', '', $instrument->image_path))) {
+            Storage::disk('public')->delete(str_replace('storage/', '', $instrument->image_path));
+        }
 
-        // Delete the image record from the database
-        $image->delete();
+        $instrument->delete();
+
         return redirect()->route('admin.instruments.index')->with('success', 'Instrument deleted successfully!');
     }
+
 }

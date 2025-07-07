@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\customPackages;
 use App\Models\Instruments;
 use Illuminate\Http\Request;
 use App\Models\Slider; // Import the Slider model

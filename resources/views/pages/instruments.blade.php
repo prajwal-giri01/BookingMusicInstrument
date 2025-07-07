@@ -1,6 +1,7 @@
 @extends('frontend.Master')
 
 @section('content')
+
     <div class="instruments-page" style="margin-top: 2rem;">
         <div class="container py-5">
             <!-- Mobile Filter Toggle -->
@@ -112,16 +113,22 @@
                     @else
                         <div class="instruments-grid" id="instrumentsContainer">
                             @foreach($instruments as $item)
-                                <div class="instrument-card">
-                                    <div class="instrument-image">
+                                <div class="instrument-card {{ $item->stock_quantity <= 0 ? 'out-of-stock' : '' }}">
+                                    <div class="instrument-image position-relative">
                                         <img src="{{ asset($item->image_path) }}" alt="{{ $item->name }}">
-                                        <div class="instrument-actions">
-                                            <a href="{{ route('detail', $item->id) }}" class="btn-quick-view">
-                                                <i class="bi bi-eye"></i>
-                                                <span>Quick View</span>
-                                            </a>
-                                        </div>
+
+                                        @if($item->stock_quantity <= 0)
+                                            <div class="stock-badge">Out of Stock</div>
+                                        @else
+                                            <div class="instrument-actions">
+                                                <a href="{{ route('detail', $item->id) }}" class="btn-quick-view">
+                                                    <i class="bi bi-eye"></i>
+                                                    <span>Quick View</span>
+                                                </a>
+                                            </div>
+                                        @endif
                                     </div>
+
                                     <div class="instrument-info">
                                         <div class="instrument-category">{{ $item->category->name }}</div>
                                         <h3 class="instrument-name">{{ $item->name }}</h3>
@@ -129,10 +136,16 @@
                                             <span class="price-value">Rs.{{ $item->rental_price }}</span>
                                             <span class="price-period">/day</span>
                                         </div>
-                                        <a href="{{ route('detail', $item->id) }}" class="btn btn-book">Book Now</a>
+
+                                        @if($item->stock_quantity > 0)
+                                            <a href="{{ route('detail', $item->id) }}" class="btn btn-book">Add To Cart</a>
+                                        @else
+                                            <button class="btn btn-secondary" disabled>Out of Stock</button>
+                                        @endif
                                     </div>
                                 </div>
                             @endforeach
+
                         </div>
                     @endif
                 </div>

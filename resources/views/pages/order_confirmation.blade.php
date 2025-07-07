@@ -1,7 +1,7 @@
 @extends('frontend.Master')
 @section('content')
     <section class="h-100 gradient-custom">
-        <div class="container py-5">
+        <div class="container "style="margin-top: 10rem">
             <div class="row justify-content-center">
                 <div class="col-md-8">
                     <div class="card text-center mb-4">

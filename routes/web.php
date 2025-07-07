@@ -7,6 +7,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\instrumentsController;
 use App\Http\Controllers\KhaltiPaymentController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PackageController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -28,6 +29,17 @@ Route::post('/khalti/purchase', [KhaltiPaymentController::class, 'purchase'])->n
 Route::get('/verify-payment', [KhaltiPaymentController::class, 'verifyPayment']);
 // ✅ User Dashboard (Only Authenticated Users)
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/custom-packages', [PackageController::class, 'packages'])->name('custom-packages.index');
+    Route::get('/custom-packages/create', [PackageController::class, 'create'])->name('custom-packages.create');
+    Route::post('/custom-packages', [PackageController::class, 'store'])->name('custom-packages.store');
+    Route::get('/custom-packages/{id}/edit', [PackageController::class, 'edit'])->name('custom-packages.edit');
+    Route::put('/custom-packages/{id}', [PackageController::class, 'update'])->name('custom-packages.update');
+    Route::delete('/custom-packages/{id}', [PackageController::class, 'destroy'])->name('custom-packages.destroy');
+    Route::post('/custom-packages/{id}/add-instruments', [PackageController::class, 'addInstruments'])->name('custom-packages.add-instruments');
+    Route::delete('/custom-packages/{packageId}/remove-instrument/{itemId}', [PackageController::class, 'removeInstrument'])->name('custom-packages.remove-instrument');
+
+    Route::post('/custom-packages/{id}/rent', [PackageController::class, 'rentNow'])->name('custom-packages.rent');
+    Route::get('/checkout/package', [OrderController::class, 'checkoutCustom'])->name('checkout.direct');
 
     Route::post('/order/{order}/payment', [PaymentController::class, 'process'])->name('order.payment.process');
 

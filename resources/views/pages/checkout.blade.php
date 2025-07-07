@@ -1,12 +1,7 @@
 @extends('frontend.Master')
 @section('content')
-    <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
     <section class="h-100 gradient-custom">
-        <div class="container py-5">
+        <div class="container " style="margin-top: 10rem">
             <div class="row d-flex justify-content-center">
                 <!-- Order Details -->
                 <div class="col-md-8">
@@ -45,6 +40,7 @@
                         </div>
                     </div>
                 </div>
+
                 <!-- Order Summary & Delivery Location -->
                 <div class="col-md-4">
                     <div class="card mb-4">
@@ -75,29 +71,45 @@
                                 </li>
                             </ul>
 
-                            <!-- Delivery Location Section -->
+                            <!-- Delivery Location Form -->
                             <form id="khalti-payment-form">
                                 @csrf
+
                                 <div class="form-group mb-3">
-                                    <label for="delivery_address">Delivery Address</label>
-                                    <input type="text" name="delivery_address" id="delivery_address" class="form-control" placeholder="Enter your address" required>
+                                    <label for="delivery_address">Full Address</label>
+                                    <input type="text" name="delivery_address" id="delivery_address" class="form-control" placeholder="E.g. House 101, Near City Mall" required>
                                 </div>
                                 <div class="form-group mb-3">
-                                    <label for="map">Select Delivery Location</label>
-                                    <div id="map" style="height: 300px;"></div>
+                                    <label for="street">Street</label>
+                                    <input type="text" name="street" id="street" class="form-control" placeholder="Street or Tole Name" required>
                                 </div>
-                                <!-- Hidden inputs to store latitude & longitude -->
-                                <input type="hidden" name="latitude" id="latitude">
-                                <input type="hidden" name="longitude" id="longitude">
+                                <div class="form-group mb-3">
+                                    <label for="ward">Ward</label>
+                                    <input type="text" name="ward" id="ward" class="form-control" placeholder="E.g. Ward 5" required>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="city">City/Municipality</label>
+                                    <input type="text" name="city" id="city" class="form-control" placeholder="E.g. Kathmandu" required>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="district">District</label>
+                                    <input type="text" name="district" id="district" class="form-control" placeholder="E.g. Lalitpur" required>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="province">Province</label>
+                                    <input type="text" name="province" id="province" class="form-control" placeholder="E.g. Bagmati Province" required>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="postal_code">Postal Code</label>
+                                    <input type="text" name="postal_code" id="postal_code" class="form-control" placeholder="E.g. 44600" required>
+                                </div>
 
+                                <input type="hidden" name="name" value="Instrument Rental">
+                                <input type="hidden" name="amount" value="{{ $item->instrument->rental_price * $item->quantity }}">
+                                <input type="hidden" name="user" value="{{ auth()->id() }}">
 
-                                    @csrf
-                                    <input type="hidden" name="service_id" value="{{ $order->id }}">
-                                    <input type="hidden" name="name" value="Instrument Rental">
-                                    <input type="hidden" name="amount" value="{{ $item->instrument->rental_price * $item->quantity, 2 }}">
-                                    <input type="hidden" name="user" value="{{ auth()->id() }}">
-                                    <button type="submit" class="btn btn-success btn-lg btn-block" id="khalti-btn">Pay with Khalti</button>
-                                </form>
+                                <button type="submit" class="btn btn-success btn-lg btn-block" id="khalti-btn">Pay with Khalti</button>
+                            </form>
 
                         </div>
                     </div>
@@ -106,59 +118,7 @@
         </div>
     </section>
 
-    <script>
-        // Default location fallback (e.g., center of India)
-        var defaultLat = 20.5937, defaultLng = 78.9629;
-        var map = L.map('map').setView([defaultLat, defaultLng], 5);
-
-        // Add OpenStreetMap tiles.
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-        }).addTo(map);
-
-        // Create a draggable marker at the default location.
-        var marker = L.marker([defaultLat, defaultLng], { draggable: true }).addTo(map);
-
-        // Function to update the hidden inputs.
-        function updatePosition(lat, lng) {
-            document.getElementById('latitude').value = lat;
-            document.getElementById('longitude').value = lng;
-        }
-
-        // Update hidden inputs when the marker is dragged.
-        marker.on('dragend', function(e) {
-            var position = marker.getLatLng();
-            updatePosition(position.lat, position.lng);
-        });
-
-        // Update hidden inputs when the map is clicked (and move the marker).
-        map.on('click', function(e) {
-            marker.setLatLng(e.latlng);
-            updatePosition(e.latlng.lat, e.latlng.lng);
-        });
-
-        // Attempt to get the user's current location.
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function(position) {
-                var currentLat = position.coords.latitude;
-                var currentLng = position.coords.longitude;
-                // Set map view to user's location.
-                map.setView([currentLat, currentLng], 13);
-                marker.setLatLng([currentLat, currentLng]);
-                updatePosition(currentLat, currentLng);
-            }, function(error) {
-                console.error("Error getting location: ", error);
-                // If error occurs, fallback to default location.
-                updatePosition(defaultLat, defaultLng);
-            });
-        } else {
-            console.log("Geolocation is not supported by this browser.");
-            updatePosition(defaultLat, defaultLng);
-        }
-
-        // Set initial hidden inputs to the default position.
-        updatePosition(defaultLat, defaultLng);
-    </script>
+    <!-- Khalti Payment Script -->
     <script>
         document.getElementById('khalti-payment-form').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -175,22 +135,23 @@
                 },
                 body: formData
             })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.khalti_url) {
+                .then(async res => {
+                    const data = await res.json();
+
+                    if (res.ok && data.khalti_url) {
                         window.location.href = data.khalti_url;
+                    } else if (data.error) {
+                        alert(data.error);  // Show the actual backend error like "Not enough stock"
+                        submitBtn.disabled = false;
+                        submitBtn.innerText = "Pay with Khalti";
                     } else {
                         alert("Error initiating payment. Please try again.");
                         submitBtn.disabled = false;
                         submitBtn.innerText = "Pay with Khalti";
                     }
                 })
-                .catch(error => {
-                    console.error('Payment initiation failed:', error);
-                    alert("Something went wrong. Please try again later.");
-                    submitBtn.disabled = false;
-                    submitBtn.innerText = "Pay with Khalti";
-                });
+
         });
     </script>
 @endsection
+

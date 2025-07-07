@@ -17,6 +17,7 @@
                             <th>Name</th>
                             <th>Image</th>
                             <th>Description</th>
+                            <th>Stock</th>
                             <th>Price</th>
                             <th>Category</th>
                             <th>Actions</th>
@@ -30,6 +31,7 @@
                                     <img src="{{ asset($instrument->image_path) }}" alt="{{ $instrument->name }}" class="img-thumbnail" width="120">
                                 </td>
                                 <td>{{ $instrument->description }}</td>
+                                <td>{{ $instrument->stock_quantity }}</td>
                                 <td>Rs.{{ number_format($instrument->rental_price, 2) }}</td>
                                 <td>{{ $instrument->category->name ?? 'N/A' }}</td>
                                 <td>
